@@ -1,0 +1,19 @@
+[Unit]
+Description=Dejavu codes service
+After=network.target
+
+[Service]
+Type=simple
+User=djv_codes
+Group=djv_codes
+LimitNOFILE=1024
+
+Restart=on-failure
+RestartSec=10
+startLimitIntervalSec=60
+
+WorkingDirectory=/home/djv_codes
+ExecStart=/usr/local/bin/djv_code_server -codes_dir=/opt/djv_codes/codes -used_codes_file=/opt/djv_codes/used_codes.txt
+
+[Install]
+WantedBy=multi-user.target

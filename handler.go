@@ -11,16 +11,11 @@ const MAX_AGE = 60 * 60 * 24 * 365
 const JSONP_CALLBACK = "callback"
 
 type GetCodeHandler struct {
-	codeManager *CodeManager
+	CodeManager *CodeManager
 }
 
-func NewGetCodeHandler(codesDir string, usedCodesPath string) (*GetCodeHandler, error) {
-	manager, err := NewCodeManager(codesDir, usedCodesPath)
-	if err != nil {
-		return nil, err
-	}
-
-	return &GetCodeHandler{manager}, nil
+type ListCodeHandler struct {
+	CodeManager *CodeManager
 }
 
 func (handler *GetCodeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +24,7 @@ func (handler *GetCodeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	if err == nil {
 		code = codeCookie.Value
 	} else if err == http.ErrNoCookie {
-		code, err = handler.codeManager.NextCode()
+		code, err = handler.CodeManager.NextCode()
 		if err != nil {
 			http.Error(w, err.Error(), 500)
 			return
@@ -51,5 +46,17 @@ func (handler *GetCodeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 		fmt.Fprintf(w, "%v(%v);", callback, code)
 	} else {
 		fmt.Fprintf(w, code)
+	}
+}
+
+func (handler *ListCodeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	codes, err := handler.CodeManager.ListCodes()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	for _, code := range codes {
+		fmt.Fprint(w, code + "\n")
 	}
 }

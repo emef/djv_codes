@@ -16,11 +16,12 @@ func main() {
 		"used_codes_file", "used_codes.txt", "File containing used codes")
 	flag.Parse()
 
-	getCodeHandler, err := djv_codes.NewGetCodeHandler(*codesDir, *usedCodesPath)
+	manager, err := djv_codes.NewCodeManager(*codesDir, *usedCodesPath)
 	if err != nil {
-		log.Fatal("Could not create handler: ", err)
+		log.Fatalf("Couldn't create code manager %v", err)
 	}
 
-	http.Handle("/get", getCodeHandler)
+	http.Handle("/get", &djv_codes.GetCodeHandler{manager})
+	http.Handle("/list", &djv_codes.ListCodeHandler{manager})
 	log.Fatal(http.ListenAndServe(*port, nil))
 }

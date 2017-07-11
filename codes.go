@@ -14,10 +14,11 @@ type CodeManager struct {
 	codes []string
 	cursor int
   mutex *sync.Mutex
+	codesDir string
 	usedCodes *os.File
 }
 
-func NewCodeManager(unusedCodesDir string, usedCodesPath string) (*CodeManager, error) {
+func NewCodeManager(codesDir string, usedCodesPath string) (*CodeManager, error) {
 	usedCodesMap := make(map[string]bool)
 	if usedCodes, err := readCodes(usedCodesPath); err == nil {
 		for _, code := range usedCodes {
@@ -25,7 +26,7 @@ func NewCodeManager(unusedCodesDir string, usedCodesPath string) (*CodeManager, 
 		}
 	}
 
-	files, err := ioutil.ReadDir(unusedCodesDir)
+	files, err := ioutil.ReadDir(codesDir)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +34,7 @@ func NewCodeManager(unusedCodesDir string, usedCodesPath string) (*CodeManager, 
 	availCodesMap := make(map[string]bool, 0)
 	for _, file := range files {
 		if !file.IsDir() {
-			path := path.Join(unusedCodesDir, file.Name())
+			path := path.Join(codesDir, file.Name())
 			fileCodes, err := readCodes(path)
 			if err != nil {
 				return nil, err
@@ -63,6 +64,7 @@ func NewCodeManager(unusedCodesDir string, usedCodesPath string) (*CodeManager, 
 		codes: codes,
 		cursor: 0,
 		mutex: &sync.Mutex{},
+		codesDir: codesDir,
 		usedCodes: usedCodesFile}
 
 	return manager, nil
@@ -108,4 +110,26 @@ func (manager *CodeManager) NextCode() (string, error) {
 		manager.cursor += 1
 		return code, nil
 	}
+}
+
+func (manager *CodeManager) ListCodes() ([]string, error) {
+	files, err := ioutil.ReadDir(manager.codesDir)
+	if err != nil {
+		return nil, err
+	}
+
+	codes := make([]string, 0)
+	for _, file := range files {
+		if !file.IsDir() {
+			path := path.Join(manager.codesDir, file.Name())
+			fileCodes, err := readCodes(path)
+			if err != nil {
+				return nil, err
+			}
+
+			codes = append(codes, fileCodes...)
+		}
+	}
+
+	return codes, nil
 }
