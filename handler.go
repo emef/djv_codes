@@ -43,7 +43,7 @@ func (handler *GetCodeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 
 	callback := r.FormValue(JSONP_CALLBACK)
 	if len(callback) > 0 {
-		fmt.Fprintf(w, "%v(%v);", callback, code)
+		fmt.Fprintf(w, "%v(\"%v\");", callback, code)
 	} else {
 		fmt.Fprintf(w, code)
 	}

@@ -1,0 +1,1 @@
+DJV_HOST=xx@xx.xx.xx.xx sh deploy/deploy.sh

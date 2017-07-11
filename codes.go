@@ -131,5 +131,7 @@ func (manager *CodeManager) ListCodes() ([]string, error) {
 		}
 	}
 
+	sort.Strings(codes)
+
 	return codes, nil
 }
