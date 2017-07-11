@@ -7,6 +7,9 @@ Type=simple
 User=djv_codes
 Group=djv_codes
 LimitNOFILE=1024
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=djv_codes
 
 Restart=on-failure
 RestartSec=10

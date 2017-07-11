@@ -36,10 +36,10 @@ func (handler *GetCodeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	log.Printf("code:%v ip:%v useragent:%v", code, r.RemoteAddr, r.UserAgent())
 
 	cookie := &http.Cookie{
-		Name: CODE_COOKIE,
-		Value: code,
+		Name:   CODE_COOKIE,
+		Value:  code,
 		MaxAge: MAX_AGE}
-  http.SetCookie(w, cookie)
+	http.SetCookie(w, cookie)
 
 	callback := r.FormValue(JSONP_CALLBACK)
 	if len(callback) > 0 {
@@ -57,6 +57,6 @@ func (handler *ListCodeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 	}
 
 	for _, code := range codes {
-		fmt.Fprint(w, code + "\n")
+		fmt.Fprint(w, code+"\n")
 	}
 }

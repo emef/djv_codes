@@ -11,10 +11,10 @@ import (
 )
 
 type CodeManager struct {
-	codes []string
-	cursor int
-  mutex *sync.Mutex
-	codesDir string
+	codes     []string
+	cursor    int
+	mutex     *sync.Mutex
+	codesDir  string
 	usedCodes *os.File
 }
 
@@ -61,10 +61,10 @@ func NewCodeManager(codesDir string, usedCodesPath string) (*CodeManager, error)
 	}
 
 	manager := &CodeManager{
-		codes: codes,
-		cursor: 0,
-		mutex: &sync.Mutex{},
-		codesDir: codesDir,
+		codes:     codes,
+		cursor:    0,
+		mutex:     &sync.Mutex{},
+		codesDir:  codesDir,
 		usedCodes: usedCodesFile}
 
 	return manager, nil
