@@ -53,8 +53,6 @@ func NewCodeManager(codesDir string, usedCodesPath string) (*CodeManager, error)
 		codes = append(codes, code)
 	}
 
-	sort.Strings(codes)
-
 	usedCodesFile, err := os.OpenFile(usedCodesPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0755)
 	if err != nil {
 		return nil, err
