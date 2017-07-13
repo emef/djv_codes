@@ -26,6 +26,6 @@ ssh $DJV_HOST "sudo systemctl start djv_codes"
 echo "installing nginx config and restarting it"
 scp $GOPATH/src/github.com/emef/djv_codes/deploy/nginx.conf $DJV_HOST:
 ssh $DJV_HOST "sudo rm /etc/nginx/sites-enabled/*"
-ssh $DJV_HOST "sudo cp nginx.conf /etc/nginx/sites-available/djv_codes"
+ssh $DJV_HOST "sudo mv nginx.conf /etc/nginx/sites-available/djv_codes"
 ssh $DJV_HOST "sudo ln -s /etc/nginx/sites-available/djv_codes /etc/nginx/sites-enabled/"
 ssh $DJV_HOST "sudo service nginx restart"

@@ -51,12 +51,28 @@ func (handler *GetCodeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 
 func (handler *ListCodeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	codes, err := handler.CodeManager.ListCodes()
-	if err != nil {
+	if err != nil || len(codes) == 0 {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
+	chr := codes[0][0]
+	chrCount := 0
+
+	// assume codes are 5 characters long
 	for _, code := range codes {
-		fmt.Fprint(w, code+"\n")
+		if code[0] != chr {
+			fmt.Fprint(w, "\n\n")
+			chr = code[0]
+			chrCount = 0
+		}
+
+		sep := "     "
+		if (chrCount + 1) % 8 == 0 {
+			sep = "\n"
+		}
+
+		fmt.Fprint(w, code + sep)
+		chrCount++
 	}
 }
